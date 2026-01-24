@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="google-site-verification" content="ZncKD_asOKKk2ppYE_7DL903YkZff7cLT1WYDu4EU6I" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tic Tac Toe | Multiplayer Game with AI</title>
+
+    <meta name="description"
+        content="Play Tic Tac Toe online with friends or against AI. Features multiplayer, difficulty levels, and modern UI.">
+
+    <meta name="keywords" content="tic tac toe, multiplayer, online game, javascript game">
+
+    <meta name="robots" content="index, follow">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Background Effects -->
+    <div class="background-effects">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <main class="container">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">✨</span>
+                <h1 class="title">Tic Tac Toe</h1>
+                <span class="logo-icon">🎮</span>
+            </div>
+            <p class="subtitle">Play Local, vs AI, or Online Multiplayer</p>
+        </header>
+
+        <!-- GAME -->
+        <div class="game-container">
+
+            <!-- MODE -->
+            <div class="mode-select">
+                <button id="pvpBtn" class="mode-btn active">
+                    <span class="mode-icon">👥</span>
+                    <span class="mode-text">Local</span>
+                </button>
+                <button id="aiBtn" class="mode-btn">
+                    <span class="mode-icon">🤖</span>
+                    <span class="mode-text">vs AI</span>
+                </button>
+                <button id="multiplayerBtn" class="mode-btn">
+                    <span class="mode-icon">🌐</span>
+                    <span class="mode-text">Online</span>
+                    <span class="online-dot"></span>
+                </button>
+
+                <div class="difficulty-wrapper" id="difficultyWrapper">
+                    <label for="difficulty" class="difficulty-label">Difficulty</label>
+                    <select id="difficulty" class="difficulty-select">
+                        <option value="easy">🟢 Easy</option>
+                        <option value="medium">🟡 Medium</option>
+                        <option value="hard">🔴 Hard</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- MULTIPLAYER PANEL -->
+            <div id="multiplayerPanel" class="multiplayer-panel hidden">
+                <div class="mp-status" id="mpStatus">
+                    <span class="status-dot offline"></span>
+                    <span id="mpStatusText">Not Connected</span>
+                </div>
+
+                <div class="mp-actions" id="mpActions">
+                    <button id="createRoomBtn" class="mp-btn create-btn">
+                        <span>🎲</span> Create Room
+                    </button>
+                    <div class="mp-divider">or</div>
+                    <div class="join-room-wrapper">
+                        <input type="text" id="roomCodeInput" class="room-code-input" placeholder="Enter code"
+                            maxlength="6" autocomplete="off">
+                        <button id="joinRoomBtn" class="mp-btn join-btn">Join</button>
+                    </div>
+                </div>
+
+                <div class="mp-room-info hidden" id="mpRoomInfo">
+                    <div class="room-code-display">
+                        <span class="room-label">Room Code:</span>
+                        <span class="room-code" id="roomCodeDisplay">------</span>
+                        <button id="copyCodeBtn" class="copy-btn" title="Copy code">📋</button>
+                    </div>
+                    <div class="room-players">
+                        <div class="room-player" id="roomPlayerX">
+                            <span class="rp-symbol x">X</span>
+                            <span class="rp-status" id="playerXStatus">Waiting...</span>
+                        </div>
+                        <div class="room-player" id="roomPlayerO">
+                            <span class="rp-symbol o">O</span>
+                            <span class="rp-status" id="playerOStatus">Waiting...</span>
+                        </div>
+                    </div>
+                    <button id="leaveRoomBtn" class="mp-btn leave-btn">
+                        <span>🚪</span> Leave Room
+                    </button>
+                </div>
+            </div>
+
+            <!-- STATUS BAR -->
+            <div class="status-bar">
+                <div id="playerX" class="player-indicator player-x active">
+                    <span class="player-symbol">X</span>
+                    <span class="player-label">Player 1</span>
+                </div>
+
+                <div class="vs-badge">VS</div>
+
+                <div id="playerO" class="player-indicator player-o">
+                    <span class="player-symbol">O</span>
+                    <span class="player-label" id="player2Label">Player 2</span>
+                </div>
+            </div>
+
+            <!-- TURN INDICATOR -->
+            <div id="turnIndicator" class="turn-indicator player-x">
+                <span class="turn-text">Current Turn:</span>
+                <span id="currentPlayerDisplay" class="current-player">X</span>
+                <span id="yourTurnBadge" class="your-turn-badge hidden">Your Turn!</span>
+            </div>
+
+            <!-- BOARD -->
+            <div class="board-wrapper">
+                <div class="board" id="board">
+                    <div class="cell" data-row="0" data-col="0"></div>
+                    <div class="cell" data-row="0" data-col="1"></div>
+                    <div class="cell" data-row="0" data-col="2"></div>
+
+                    <div class="cell" data-row="1" data-col="0"></div>
+                    <div class="cell" data-row="1" data-col="1"></div>
+                    <div class="cell" data-row="1" data-col="2"></div>
+
+                    <div class="cell" data-row="2" data-col="0"></div>
+                    <div class="cell" data-row="2" data-col="1"></div>
+                    <div class="cell" data-row="2" data-col="2"></div>
+                </div>
+            </div>
+
+            <!-- RESTART -->
+            <button id="restartBtn" class="restart-btn">
+                <span class="btn-icon">🔄</span>
+                <span>Restart Game</span>
+            </button>
+
+        </div>
+
+        <!-- SCOREBOARD -->
+        <div class="score-board">
+            <div class="score-item score-x">
+                <span class="score-label">X Wins</span>
+                <span class="score-value" id="xWins">0</span>
+            </div>
+            <div class="score-item score-draw">
+                <span class="score-label">Draws</span>
+                <span class="score-value" id="draws">0</span>
+            </div>
+            <div class="score-item score-o">
+                <span class="score-label">O Wins</span>
+                <span class="score-value" id="oWins">0</span>
+            </div>
+        </div>
+
+        <!-- RESULT MODAL -->
+        <div id="modalOverlay" class="modal-overlay">
+            <div class="modal">
+                <div class="modal-glow"></div>
+                <div id="resultIcon" class="result-icon">🎉</div>
+                <h2 id="resultTitle" class="result-title"></h2>
+                <p id="resultSubtitle" class="result-subtitle"></p>
+                <button id="playAgainBtn" class="play-again-btn">
+                    <span class="btn-icon">🎮</span>
+                    <span>Play Again</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
